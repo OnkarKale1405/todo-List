@@ -8,9 +8,6 @@ import {
     getCurrentUser,
     updateAccountDetails
 } from "../controllers/user.controller.js";
-import {
-    updateUserAvatar
-} from "../controllers/userFiles.controller.js";
 
 // middlewares
 import { upload } from "../middlewares/multer.middleware.js"
@@ -30,11 +27,5 @@ router.route("/refresh-token").post(refreshAccessToken);
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/user").get(verifyJWT, getCurrentUser);
 router.route("/update-details").patch(verifyJWT, updateAccountDetails);
-router.route("/update-avatar")
-    .patch(
-        verifyJWT,
-        upload.single("avatar"),
-        updateUserAvatar
-    );
 
 export default router

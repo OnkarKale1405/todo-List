@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Todo } from "../models/todo.models.js";
+import { User } from "../models/user.models.js";
 import { SubTodo } from "../models/sub_todo.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { isValidObjectId } from "mongoose";
@@ -36,7 +37,7 @@ const getSubTodos = asyncHandler(async (req, res) => {
 });
 
 const toggleComplete = asyncHandler(async (req, res) => {
-    const { subTodoId } = req.body;
+    const { subTodoId, userId } = req.body;
 
     // validating todoId
     if (!subTodoId || subTodoId.trim() === "") {
@@ -46,6 +47,19 @@ const toggleComplete = asyncHandler(async (req, res) => {
         throw new ApiError(400, "subTodoId is invalid ObjectId");
     }
 
+    // validating userId
+    if (!userId || userId.trim() === "") {
+        throw new ApiError(401, "userId is required");
+    }
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(401, "userId is invalid");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
+
     // finding if the todo exists
     const subTodo = await SubTodo.findById(subTodoId);
     if (!subTodo) {
@@ -53,7 +67,7 @@ const toggleComplete = asyncHandler(async (req, res) => {
     }
 
     // check if the user is authorized to update the sub todo
-    if (subTodo.createdBy.toString() !== req.user?._id.toString()) {
+    if (subTodo.createdBy.toString() !== user?._id.toString()) {
         throw new ApiError(403, "Unauthorized action");
     }
 

@@ -61,7 +61,7 @@ const getTodoById = asyncHandler(async (req, res) => {
 });
 
 const toggleComplete = asyncHandler(async (req, res) => {
-    const { todoId } = req.body;
+    const { todoId, userId } = req.body;
 
     // validating todoId
     if (!todoId || todoId.trim() === "") {
@@ -71,13 +71,18 @@ const toggleComplete = asyncHandler(async (req, res) => {
         throw new ApiError(401, "todoId is invalid");
     }
 
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
+
     // finding if the todo exists
     const todo = await Todo.findById(todoId);
     if (!todo) {
         throw new ApiError(404, "Todo does not exist");
     }
 
-    if (todo.createdBy.toString() !== req.user?._id.toString()) {
+    if (todo.createdBy.toString() !== user?._id.toString()) {
         throw new ApiError(403, "Unauthorized action");
     }
 
@@ -106,7 +111,7 @@ const toggleComplete = asyncHandler(async (req, res) => {
 });
 
 const deleteTodo = asyncHandler(async (req, res) => {
-    const { todoId, userId } = req.params;
+    const { todoId, userId } = req.body;
 
     console.log(todoId);
     // validating todoId
@@ -195,7 +200,7 @@ const createTodo = asyncHandler(async (req, res) => {
 
 const updateTodo = asyncHandler(async (req, res) => {
     const { newContent } = req.body;
-    const { todoId } = req.body;
+    const { todoId, userId } = req.body;
 
     // validating content
     if (!content || content.trim() === "") {
@@ -210,13 +215,26 @@ const updateTodo = asyncHandler(async (req, res) => {
         throw new ApiError(401, "todoId is invalid");
     }
 
+    // validating userId
+    if (!userId || userId.trim() === "") {
+        throw new ApiError(401, "userId is required");
+    }
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(401, "userId is invalid");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
+
     // finding if the todo exists
     const todo = await Todo.findById(todoId);
     if (!todo) {
         throw new ApiError(404, "Todo does not exist");
     }
 
-    if (todo.createdBy.toString() !== req.user?._id.toString()) {
+    if (todo.createdBy.toString() !== user?._id.toString()) {
         throw new ApiError(403, "Unauthorized action");
     }
 
@@ -243,7 +261,7 @@ const updateTodo = asyncHandler(async (req, res) => {
 });
 
 const addSubTodo = asyncHandler(async (req, res) => {
-    const { content, todoId } = req.body;
+    const { content, todoId, userId } = req.body;
 
     if (!content || content.trim() === "") {
         throw new ApiError(400, "content is required");
@@ -257,6 +275,19 @@ const addSubTodo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "todoId is invalid");
     }
 
+    // validating userId
+    if (!userId || userId.trim() === "") {
+        throw new ApiError(401, "userId is required");
+    }
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(401, "userId is invalid");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
+
     // finding todo using todoId
     const todo = await Todo.findById(todoId);
     if (!todo) {
@@ -264,14 +295,14 @@ const addSubTodo = asyncHandler(async (req, res) => {
     }
 
     // check if the user is authorized to update the todo
-    if (todo.createdBy.toString() !== req.user?._id.toString()) {
+    if (todo.createdBy.toString() !== user?._id.toString()) {
         throw new ApiError(403, "Unauthorized action");
     }
 
     // creating a new sub todo
     const createdSubTodo = await SubTodo.create({
         content,
-        createdBy: req.user?._id
+        createdBy: user?._id
     })
     if (!createdSubTodo) {
         throw new ApiError(500, "Error while creating sub todo");
@@ -301,7 +332,7 @@ const addSubTodo = asyncHandler(async (req, res) => {
 });
 
 const removeSubTodo = asyncHandler(async (req, res) => {
-    const { todoId, subTodoId } = req.body;
+    const { todoId, subTodoId, userId } = req.body;
 
     // validating todoId
     if (!todoId || todoId.trim() === "") {
@@ -319,6 +350,19 @@ const removeSubTodo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "subTodoId is invalid ObjectId");
     }
 
+    // validating userId
+    if (!userId || userId.trim() === "") {
+        throw new ApiError(401, "userId is required");
+    }
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(401, "userId is invalid");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
+
     // finding todo using todoId
     const todo = await Todo.findById(todoId);
     if (!todo) {
@@ -326,7 +370,7 @@ const removeSubTodo = asyncHandler(async (req, res) => {
     }
 
     // check if the user is authorized to update the todo
-    if (todo.createdBy.toString() !== req.user?._id.toString()) {
+    if (todo.createdBy.toString() !== user?._id.toString()) {
         throw new ApiError(403, "Unauthorized action");
     }
 
