@@ -4,21 +4,23 @@ import { Todo } from "../models/todo.models.js";
 import { SubTodo } from "../models/sub_todo.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import mongoose, { isValidObjectId } from "mongoose";
+import { User } from "../models/user.models.js";
 
 const getTodos = asyncHandler(async (req, res) => {
 
     const { userId } = req.body;
-
-    if (!userId || userId.trim() === "") {
-        throw new ApiError(401, "userId is required");
-    }
     if (!isValidObjectId(userId)) {
-        throw new ApiError(401, "userId is invalid");
+        throw new ApiError(400, "userId is invalid");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
     }
 
     // getting todos from database
     const todos = await Todo.find({
-        createdBy: userId
+        createdBy: user?._id
     })
     if (!todos) {
         throw new ApiError(404, "No todo added");
@@ -104,8 +106,9 @@ const toggleComplete = asyncHandler(async (req, res) => {
 });
 
 const deleteTodo = asyncHandler(async (req, res) => {
-    const { todoId, userId } = req.body;
+    const { todoId, userId } = req.params;
 
+    console.log(todoId);
     // validating todoId
     if (!todoId || todoId.trim() === "") {
         throw new ApiError(401, "todoId is required");
@@ -122,13 +125,18 @@ const deleteTodo = asyncHandler(async (req, res) => {
         throw new ApiError(401, "userId is invalid");
     }
 
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
+
     // finding if the todo exists
     const todo = await Todo.findById(todoId);
     if (!todo) {
         throw new ApiError(404, "Todo does not exist");
     }
 
-    if (todo.createdBy.toString() !== req.user?._id.toString()) {
+    if (todo.createdBy.toString() !== user?._id.toString()) {
         throw new ApiError(403, "Unauthorized action");
     }
 
@@ -149,24 +157,29 @@ const deleteTodo = asyncHandler(async (req, res) => {
 
 const createTodo = asyncHandler(async (req, res) => {
     const { content } = req.body;
-    // const { userId } = req.body;
+    const { userId } = req.body;
 
     // validating content
     if (!content || content.trim() === "") {
         throw new ApiError(401, "content is required");
     }
 
-    // // validating userId
-    // if (!userId || userId.trim() === "") {
-    //     throw new ApiError(401, "userId is required");
-    // }
-    // if (!isValidObjectId(userId)) {
-    //     throw new ApiError(401, "userId is invalid");
-    // }
+    // validating userId
+    if (!userId || userId.trim() === "") {
+        throw new ApiError(401, "userId is required");
+    }
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(401, "userId is invalid");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(401, "User not found");
+    }
 
     const createdTodo = await Todo.create({
         content,
-        createdBy: req?._id
+        createdBy: user?._id
     })
     if (!createdTodo) {
         throw new ApiError(500, "Error while creating todo");

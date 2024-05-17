@@ -8,7 +8,7 @@ import {
     getCurrentUser,
     updateAccountDetails
 } from "../controllers/user.controller.js";
-import { 
+import {
     updateUserAvatar
 } from "../controllers/userFiles.controller.js";
 
@@ -19,16 +19,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router.route("/register").post(
-    upload.fields([
-        {
-            name: "avatar",
-            maxCount: 1
-        },
-        {
-            name: "coverImage",
-            maxCount: 1
-        }
-    ]),
+    upload.single("avatar"),
     registerUser
 );
 router.route("/login").post(loginUser);
@@ -40,10 +31,10 @@ router.route("/change-password").post(verifyJWT, changeCurrentPassword);
 router.route("/user").get(verifyJWT, getCurrentUser);
 router.route("/update-details").patch(verifyJWT, updateAccountDetails);
 router.route("/update-avatar")
-.patch(
-    verifyJWT,
-    upload.single("avatar"),
-    updateUserAvatar
-);
+    .patch(
+        verifyJWT,
+        upload.single("avatar"),
+        updateUserAvatar
+    );
 
 export default router

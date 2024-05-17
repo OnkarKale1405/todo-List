@@ -14,14 +14,14 @@ import {
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router();
-router.use(verifyJWT); // Apply verifyJWT middleware to all routes in this file
+// router.use(verifyJWT);  Apply verifyJWT middleware to all routes in this file
 
 // secured routes
-router.route('/get-todos', getTodos);
-router.route('/get-todo/:id', getTodoById);
-router.route('/toggle/complete-status', toggleComplete);
-router.route('/delete-todo', deleteTodo);
-router.route('/create-todo', createTodo);
+router.route('/get-todos').post(getTodos);
+router.route('/get-todo/:id').get(getTodoById);
+router.route('/toggle/complete-status').post(toggleComplete);
+router.route('/delete-todo').post(deleteTodo);
+router.route('/create-todo').post(createTodo);
 router.route('/update-todo', updateTodo);
 router.route('/add-subtodo', addSubTodo);
 router.route('/remove-subtodo', removeSubTodo);

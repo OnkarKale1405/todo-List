@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-// import axios from 'axios';
+import axios from '../api/axios';
 // import useAuth from '../hooks/useAuth';
 import videoMP4 from "../assets/bubbles.mp4";
+import { useAuth } from '../context/AuthProvider';
 
 const Login = () => {
     // State to hold form data and validation errors
@@ -11,7 +12,7 @@ const Login = () => {
         password: ''
     });
     const [errors, setErrors] = useState({});
-    // const { auth, setAuth } = useAuth();
+    const { auth, setAuth } = useAuth();
     const navigate = useNavigate();
 
     // Regex patterns for email and password validation
@@ -31,6 +32,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+
         // Validation
         const validationErrors = {};
         if (!formData.email || !emailRegex.test(formData.email)) {
@@ -52,29 +54,25 @@ const Login = () => {
         console.log(FinalFormData);
         // If no validation errors, send data to the backend
         try {
-            // const response = await fetch('http://localhost:8000/api/users/login', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json', // Set the Content-Type header
-            //     },
-            //     body: JSON.stringify(FinalFormData), // Stringify the object
-            // });
+            const response = await axios.post("http://localhost:8000/v1/api/users/login",
+                {
+                    email: formData.email,
+                    password: formData.password
+                }
+            );
+            console.log(response);
+            const accessToken = response.data.data.accessToken;
+            const refreshToken = response.data.data.refreshToken;
+            console.log(accessToken);
+            const username = response.data.data.user.username;
+            const _id = response.data.data.user._id;
+            console.log(_id);
+            // const role = result.data.user.role;
+            setAuth({ email: formData.email, username, _id, accessToken, refreshToken });
 
-            // if (auth.accessToken) {
-            navigate('/dashboard/files');
-            // }
-            // =======
-            //             const result = await response.json();
-            //             console.log(result);
-            //             const accessToken = result.data.accessToken ;
-            //             const username = result.data.user.username ;
-            //             const role = result.data.user.role ;
-            //             setAuth({ email: formData.email, username, accessToken, role });
-
-            //             if (auth.accessToken) {
-            //                 navigate('/dashboard/files');
-            //             }
-
+            if (accessToken) {
+                navigate('/main');
+            }
 
         } catch (error) {
             if (error.response) {
