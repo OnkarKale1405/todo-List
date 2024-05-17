@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/todo-app/static/css/main.5693ce75.css",
+    "main.js": "/todo-app/static/js/main.7fa18133.js",
+    "static/media/bubbles.mp4": "/todo-app/static/media/bubbles.d7f419cfc7072c9b97b0.mp4",
+    "index.html": "/todo-app/index.html",
+    "main.5693ce75.css.map": "/todo-app/static/css/main.5693ce75.css.map",
+    "main.7fa18133.js.map": "/todo-app/static/js/main.7fa18133.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5693ce75.css",
+    "static/js/main.7fa18133.js"
+  ]
+}
