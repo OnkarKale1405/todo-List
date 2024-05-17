@@ -145,8 +145,23 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+
+  // validating userId
+  if (!userId || userId.trim() === "") {
+    throw new ApiError(401, "userId is required");
+  }
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(401, "userId is invalid");
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(401, "User not found");
+  }
+
   await User.findByIdAndUpdate(
-    req.user._id,
+    user._id,
     {
       $unset: {
         refreshToken: 1, // this removes the field from document

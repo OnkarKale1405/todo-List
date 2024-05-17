@@ -11,7 +11,7 @@ const Landing = () => {
                 <div className="w-[60%] h-full flex justify-center items-center">
                     <div className="w-[90%] h-[60%] text-[#323232] flex flex-col justify-center">
                         <div className='hero-text flex flex-col'>
-                            <span className='text-6xl font-bold my-2'>Share your files</span>
+                            <span className='text-6xl font-bold my-2'>Organize your files</span>
                             <span className='text-6xl font-bold my-4'>in
                                 <span className='px-4 bg-white mx-1'
                                     style={{

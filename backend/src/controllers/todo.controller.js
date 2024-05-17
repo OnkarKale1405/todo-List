@@ -71,6 +71,14 @@ const toggleComplete = asyncHandler(async (req, res) => {
         throw new ApiError(401, "todoId is invalid");
     }
 
+    // validating userId
+    if (!userId || userId.trim() === "") {
+        throw new ApiError(401, "userId is required");
+    }
+    if (!isValidObjectId(userId)) {
+        throw new ApiError(401, "userId is invalid");
+    }
+
     const user = await User.findById(userId);
     if (!user) {
         throw new ApiError(401, "User not found");

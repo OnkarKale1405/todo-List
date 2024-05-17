@@ -3,10 +3,14 @@ import InfiniteScroll from '../components/InfiniteScroll';
 import axios from "../api/axios.js";
 import Todos from '../components/Todos.jsx';
 import { useAuth } from '../context/AuthProvider.js';
+import useLogout from "../hooks/useLogout.js"
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Main = () => {
     const today = new Date();
     const { auth } = useAuth();
+    const logout = useLogout();
+    const navigate = useNavigate();
     const [todos, setTodos] = useState([]);
     const [content, setContent] = useState("");
 
@@ -82,8 +86,17 @@ const Main = () => {
         }
     }
 
+    const signOut = async () => {
+        await logout();
+        navigate("/");
+    };
+
     return (
-        <div className='h-screen w-full bg-gray-100 flex justify-center items-center'>
+        <div className='h-screen w-full bg-gray-100 flex justify-center items-center relative'>
+            <button onClick={signOut}
+                className='py-2 px-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none text-lg absolute top-4 right-4'>
+                Logout
+            </button>
             <div className='max-sm:w-full h-[80%] w-[60%] rounded-3xl'>
                 {/* <div className='px-12 py-8'>
                     <InfiniteScroll />
