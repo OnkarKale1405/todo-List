@@ -1,3 +1,6 @@
+# Deployed link
+https://todo-app-vert-gamma-60.vercel.app/
+
 # Landing page
 ![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/60439515-1fe8-4480-827a-c150adcf2e4c)
 
