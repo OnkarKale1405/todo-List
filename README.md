@@ -2,7 +2,7 @@
 https://todo-app-vert-gamma-60.vercel.app/
 
 # Landing page
-![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/60439515-1fe8-4480-827a-c150adcf2e4c)
+![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/cb50669c-d770-4d40-a46d-6f264c229c7e)
 
 # Login
 ![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/7c688ef0-13c7-4764-9417-8ddfc71ed54a)
