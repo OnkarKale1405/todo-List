@@ -1,3 +1,22 @@
+# Deployed link
+https://todo-app-vert-gamma-60.vercel.app/
+
+# Landing page
+![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/60439515-1fe8-4480-827a-c150adcf2e4c)
+
+# Login
+![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/7c688ef0-13c7-4764-9417-8ddfc71ed54a)
+
+use for testing the app
+email : onkarkale0007@gmail.com
+password : Pass@123
+
+# Register
+![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/52973ec4-78eb-456a-aac9-0b591a657dca)
+
+# Main page
+![image](https://github.com/OnkarKale1405/todo-app/assets/142905417/77598408-8af9-47a9-b180-54cc4fb52617)
+
 # MERN Stack Todo App
 
 This is a simple Todo application built using the MERN stack.
